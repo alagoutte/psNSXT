@@ -101,6 +101,8 @@ function Get-NSXTPolicyInfraSegments {
     Param(
         [Parameter(Mandatory = $false, ParameterSetName = "segment")]
         [string]$segment,
+        [Parameter(Mandatory = $false, ParameterSetName = "segment")]
+        [switch]$statistics,
         [Parameter(Mandatory = $false, ParameterSetName = "display_name")]
         [string]$display_name,
         [Parameter(Mandatory = $false)]
@@ -116,6 +118,13 @@ function Get-NSXTPolicyInfraSegments {
 
         if ( $PsBoundParameters.ContainsKey('segment') ) {
             $uri += "/$segment"
+
+            #if statistics is enable add summary on URI
+            if ( $PsBoundParameters.ContainsKey('statistics') ) {
+                if ( $statistics ) {
+                    $uri += "/statistics"
+                }
+            }
         }
 
         $response = Invoke-NSXTRestMethod -uri $uri -method 'GET' -connection $connection

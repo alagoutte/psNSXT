@@ -46,6 +46,14 @@ Describe "Get Segments" {
         Confirm-NSXTSegments $sg | Should -Be $true
     }
 
+    It "Get Segments by segment(_name) ($pester_sg) with statistics" {
+        $tz = Get-NSXTTransportZones -zone_id $pester_sg -statistics
+        $tz.transport_zone_id | Should -Be $pester_sg
+        $tz.num_transport_nodes | Should -Not -BeNullOrEmpty
+        $tz.num_logical_switches | Should -Not -BeNullOrEmpty
+        $tz.num_logical_ports | Should -Not -BeNullOrEmpty
+    }
+
     AfterAll {
         Get-NSXTPolicyInfraSegments -segment $pester_sg | Remove-NSXTPolicyInfraSegments -confirm:$false
         #Wait 2 seconds to be sure the Segments is deleted (it can be make 5 sec for be removed !)
